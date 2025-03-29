@@ -21,7 +21,7 @@ class App extends Component {
     this.setState({ selectedOption: e.target.value });   
   }
 
-  handleFormsubmit = (e) => {
+  handleFormSubmit = (e) => {
     e.preventDefault();
     this.checkAnswer();
     this.handleNextQuestion();
@@ -30,7 +30,7 @@ class App extends Component {
   checkAnswer = () => {
     const { questionBank, currentQuestion, selectedOption, score } = this.state;
     if (selectedOption === questionBank[currentQuestion].answer) {
-      this.setState();
+      this.setState((prevState) => ({ score: prevState.score + 1 }));
     }
   };
 
@@ -49,11 +49,24 @@ class App extends Component {
   };
 
   render() {
-    const { questionBank: qBank, currentQuestion, selectedOption, score, quizEnd } = this.state;
+    const { questionBank, currentQuestion, selectedOption, score, quizEnd } = this.state;
     return (
       <div className="App">
         <h1>QUIZ APP</h1>
-        {}
+        {!quizEnd ? (
+          <Question
+            question={questionBank[currentQuestion]}
+            selectedOption={selectedOption}
+            onOptionChange={this.handleOptionChange}
+            onSubmit={this.handleFormSubmit}
+          />
+        ) : (
+          <Score
+            score={score}
+            onNextQuestion={this.handleNextQuestion}
+            className="score"
+          />
+        )}
       </div>
     );
   }
